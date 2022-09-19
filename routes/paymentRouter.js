@@ -16,4 +16,19 @@ router.get('/', (req, res) => {
   res.json(payments)
 })
 
+router.post('/', (req, res) => {
+  const body = req.body;
+  const date = new Date();
+  const timeZone = date.getTimezoneOffset();
+  res.json({
+    message: 'Created',
+    data: {
+      ...body,
+      date: new Date(date+ 'GMT' + timeZone),
+      type: 'payment'
+    },
+    timeZone
+  })
+})
+
 module.exports = router
