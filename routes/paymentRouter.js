@@ -13,14 +13,14 @@ router.get('/', (req, res) => {
     }
     payments.push(newPayment)
   }
-  res.json(payments)
-})
+  res.status(200).json(payments)
+});
 
 router.post('/', (req, res) => {
   const body = req.body;
   const date = new Date();
   const timeZone = date.getTimezoneOffset();
-  res.json({
+  res.status(201).json({
     message: 'Created',
     data: {
       ...body,
@@ -29,6 +29,24 @@ router.post('/', (req, res) => {
     },
     timeZone
   })
-})
+});
+
+router.patch('/:id', (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  res.status(201).json({
+    message: 'update',
+    data: body,
+    id
+  })
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  res.status(200).json({
+    message: 'delete',
+    id
+  })
+});
 
 module.exports = router

@@ -9,7 +9,7 @@ function routerApi(app) {
   const router = express.Router();
   app.use('/api/v1', router);
   router.use('/', homeRouter);
-  router.use('/entry', entryRouter);
+  router.use('/entries', entryRouter);
   router.use('/payments', paymentRouter);
   router.use('/login', loginRouter);
   router.use('/signup', signUpRouter);
