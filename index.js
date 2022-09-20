@@ -4,14 +4,14 @@ const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/err
 const cors = require('cors');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
 // const whiteList = ['https://example.com']
 // const options = {
 //   origin: (origin, callback) => {
-//     if (whiteList.includes(origin)) {
+//     if (whiteList.includes(origin) || !origin) {
 //       callback(null, true)
 //     } else {
 //       callback(new Error('No permitido'))
