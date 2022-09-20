@@ -1,4 +1,5 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
 
 class paymentsService{
   constructor(){
@@ -38,7 +39,7 @@ class paymentsService{
   async findOne(id){
     const payment = this.payments.find(item => item.id === id);
     if (!payment){
-      throw new Error('Payment not found');
+      throw boom.notFound('Payment not found');
     } else{
       return payment;
     }
@@ -47,7 +48,7 @@ class paymentsService{
   async update(id, data) {
     const index = this.payments.findIndex(item => item.id === id);
     if (index === -1){
-      throw new Error('Payment not found');
+      throw boom.notFound('Payment not found');
     }
     const payment = this.payments[index];
     this.payments[index] = {
@@ -60,7 +61,7 @@ class paymentsService{
   async delete(id) {
     const index = this.payments.findIndex(item => item.id === id);
     if (index === -1){
-      throw new Error('Payment not found');
+      throw boom.notFound('Payment not found');
     }
     this.payments.splice(index, 1);
     return id;
