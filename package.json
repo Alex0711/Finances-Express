@@ -19,11 +19,12 @@
     "prettier": "^2.7.1"
   },
   "dependencies": {
-    "faker": "^5.5.3",
     "@hapi/boom": "^10.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.1",
-    "joi": "^17.6.0"
+    "faker": "^5.5.3",
+    "joi": "^17.6.0",
+    "pg": "^8.8.0"
   },
   "engines": {
     "node": "16.x"
