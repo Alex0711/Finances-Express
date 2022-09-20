@@ -1,51 +1,51 @@
 const express = require('express');
-const faker = require('faker');
-const router = express.Router();
+const paymentsService = require('../services/paymentsService');
 
-router.get('/', (req, res) => {
-  const payments = []
-  for (let i = 0; i < 100; i++) {
-    const newPayment = {
-      transactionType: faker.finance.transactionType(),
-      amount: faker.finance.amount(),
-      date: faker.date.recent(),
-      type: "Payment"
-    }
-    payments.push(newPayment)
-  }
-  res.status(200).json(payments)
+const router = express.Router();
+const service = new paymentsService();
+
+router.get('/', async(req, res) => {
+  const payments = await service.find();
+  res.status(200).json(payments);
 });
 
-router.post('/', (req, res) => {
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const payment = await service.findOne(id);
+    res.status(200).json(payment);
+  } catch (error) {
+    res.status(404).json(error.message);
+  }
+});
+
+router.post('/', async (req, res) => {
   const body = req.body;
-  const date = new Date();
-  const timeZone = date.getTimezoneOffset();
+  const newPayment = await service.create(body)
+
   res.status(201).json({
     message: 'Created',
     data: {
-      ...body,
-      date: new Date(date+ 'GMT' + timeZone),
-      type: 'payment'
-    },
-    timeZone
+      newPayment
+    }
   })
 });
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
   const { id } = req.params;
   const body = req.body;
+  const newPayment = await service.update(id, body);
   res.status(201).json({
-    message: 'update',
-    data: body,
-    id
+    newPayment
   })
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async(req, res) => {
   const { id } = req.params;
+  const rta = await service.delete(id);
   res.status(200).json({
     message: 'delete',
-    id
+    id: rta,
   })
 });
 
