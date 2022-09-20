@@ -1,7 +1,8 @@
 const Joi = require('joi');
+const conceptValues = ['food', 'services', 'clothing', 'entertainment', 'home', 'health', 'others']
 
 const id = Joi.string().uuid();
-const concept = Joi.string().min(3).max(20);
+const concept = Joi.string().min(3).max(20).valid(...conceptValues);
 const amount = Joi.number().min(0);
 
 const createPaymentSchema = Joi.object({

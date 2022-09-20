@@ -11,7 +11,7 @@ class paymentsService{
     for (let i = 0; i < 100; i++) {
       this.payments.push({
         id: faker.datatype.uuid(),
-        transactionType: faker.finance.transactionType(),
+        concept: faker.finance.transactionType(),
         amount: faker.finance.amount(),
         date: faker.date.recent(),
         type: "Payment"
