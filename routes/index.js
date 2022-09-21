@@ -2,7 +2,7 @@ const express = require('express');
 const userRouter = require('./userRouter')
 const entryRouter = require('./entryRouter')
 const homeRouter = require('./homeRouter');
-const paymentRouter = require('./paymentRouter');
+const operationRouter = require('./operationRouter');
 const loginRouter = require('./loginRouter');
 const signUpRouter = require('./signUpRouter');
 
@@ -10,9 +10,9 @@ function routerApi(app) {
   const router = express.Router();
   app.use('/api/v1', router);
   router.use('/', homeRouter);
-  router.use('/entries', entryRouter);
-  router.use('/payments', paymentRouter);
+  router.use('/operations', operationRouter);
   router.use('/users', userRouter);
+  router.use('/entries', entryRouter);
   router.use('/login', loginRouter);
   router.use('/signup', signUpRouter);
 }

@@ -1,14 +1,14 @@
 const express = require('express');
-const paymentsService = require('../services/paymentsService');
-const validatorHandler = require('./../middlewares/validatorHandler');
+const operationService = require('../services/operationService');
+const validatorHandler = require('../middlewares/validatorHandler');
 const {
-  createPaymentSchema,
-  updatePaymentSchema,
-  getPaymentSchema,
-} = require('./../schemas/paymentSchema');
+  createOperation,
+  updateOperationSchema,
+  getOperationSchema,
+} = require('./../schemas/operationSchema');
 
 const router = express.Router();
-const service = new paymentsService();
+const service = new operationService();
 
 router.get('/', async (req, res, next) => {
   try {
@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
 
 router.get(
   '/:id',
-  validatorHandler(getPaymentSchema, 'params'),
+  validatorHandler(getOperationSchema, 'params'),
   async (req, res, next) => {
     const { id } = req.params;
     try {
@@ -35,16 +35,16 @@ router.get(
 
 router.post(
   '/',
-  validatorHandler(createPaymentSchema, 'body'),
+  validatorHandler(createOperation, 'body'),
   async (req, res, next) => {
   try {
     const body = req.body;
-    const newPayment = await service.create(body);
+    const newOperation = await service.create(body);
 
     res.status(201).json({
       message: 'Created',
       data: {
-        newPayment,
+        newOperation,
       },
     });
   } catch (error) {
@@ -54,8 +54,8 @@ router.post(
 
 router.patch(
   '/:id',
-  validatorHandler(updatePaymentSchema, 'body'),
-  validatorHandler(getPaymentSchema, 'params'),
+  validatorHandler(updateOperationSchema, 'body'),
+  validatorHandler(getOperationSchema, 'params'),
   async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -71,7 +71,7 @@ router.patch(
 
 router.delete(
   '/:id',
-  validatorHandler(getPaymentSchema, 'params'),
+  validatorHandler(getOperationSchema, 'params'),
   async (req, res, next) => {
   try {
     const { id } = req.params;
