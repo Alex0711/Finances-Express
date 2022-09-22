@@ -18,4 +18,14 @@ function boomErrorHandler(err, req, res, next) {
   next(err);
 };
 
-module.exports = { logErrors, errorHandler, boomErrorHandler }
+function queryErrorHandler(err, req, res, next) {
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    const rta = err.errors[0].message
+    res.status(409).json({
+      'message': rta
+    })
+  }
+  next(err);
+};
+
+module.exports = { logErrors, errorHandler, boomErrorHandler, queryErrorHandler }

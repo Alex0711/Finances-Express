@@ -1,6 +1,5 @@
 const express = require('express');
 const userRouter = require('./userRouter')
-const entryRouter = require('./entryRouter')
 const homeRouter = require('./homeRouter');
 const operationRouter = require('./operationRouter');
 const loginRouter = require('./loginRouter');
@@ -12,7 +11,6 @@ function routerApi(app) {
   router.use('/', homeRouter);
   router.use('/operations', operationRouter);
   router.use('/users', userRouter);
-  router.use('/entries', entryRouter);
   router.use('/login', loginRouter);
   router.use('/signup', signUpRouter);
 }

@@ -1,6 +1,7 @@
 const boom = require('@hapi/boom');
 const faker = require('faker');
-// const getConnection = require('../libs/postgres');
+const { models } = require('../libs/sequelize');
+
 
 class userService{
   constructor(){
@@ -18,18 +19,19 @@ class userService{
   }
 
   async create(data) {
-    const newUser = data;
-    delete newUser.passwordConf;
-    this.users.push(newUser);
+    delete data.confirmPassword;
+    const newUser = await models.User.create(data);
+    console.log('service: ', {newUser})
     return newUser;
   }
 
   async find() {
-    return this.users;
+    const users = await models.User.findAll();
+    return users;
   };
 
-  async findOne(email){
-    const user = this.users.find(item => item.email === email);
+  async findOne(id){
+    const user = await models.User.findByPk(id);
     if (!user){
       throw boom.notFound('User not found');
     } else{
@@ -37,29 +39,23 @@ class userService{
     }
   };
 
-  async update(email, data) {
-    const index = this.users.findIndex(item => item.email === email);
-    if (index === -1){
-      throw boom.notFound('User not found');
-    }
-    const user = this.users[index];
-
+  async update(id, data) {
+    const user = await this.findOne(id);
     if(user.password !== data.password) {
       throw boom.unauthorized('Unautorized')
     }
+    data.password = data.newPassword;
+    delete data.newPassword;
+    delete data.confirmPassword
 
-    this.users[index].password = data.newPassword
-
-    return this.users[index];
+    const rta = user.update(data)
+    return rta;
   };
 
-  async delete(email) {
-    const index = this.users.findIndex(item => item.email === email);
-    if (index === -1){
-      throw boom.notFound('User not found');
-    }
-    this.users.splice(index, 1);
-    return email;
+  async delete(id) {
+    const user = await this.findOne(id);
+    const rta = await user.destroy()
+    return rta;
   }
 }
 

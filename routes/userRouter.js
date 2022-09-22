@@ -20,12 +20,12 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get(
-  '/:email',
+  '/:id',
   validatorHandler(getUserSchema, 'params'),
   async (req, res, next) => {
-    const { email } = req.params;
+    const { id } = req.params;
     try {
-      const user = await service.findOne(email);
+      const user = await service.findOne(id);
       res.status(200).json(user);
     } catch (error) {
       next(error);
@@ -40,6 +40,7 @@ router.post(
   try {
     const body = req.body;
     const newUser = await service.create(body);
+    console.log('router: ', {newUser})
 
     res.status(201).json({
       message: 'Created',
@@ -48,21 +49,22 @@ router.post(
       },
     });
   } catch (error) {
+    console.log('router: ', {error})
     next(error);
   }
 });
 
 router.patch(
-  '/:email',
+  '/:id',
   validatorHandler(getUserSchema, 'params'),
   validatorHandler(updateUserSchema, 'body'),
   async (req, res, next) => {
   try {
-    const { email } = req.params;
+    const { id } = req.params;
     const body = req.body;
-    const newUser = await service.update(email, body);
+    const user = await service.update(id, body);
     res.status(201).json({
-      newUser,
+      user,
     });
   } catch (error) {
     next(error);
@@ -70,15 +72,15 @@ router.patch(
 });
 
 router.delete(
-  '/:email',
+  '/:id',
   validatorHandler(getUserSchema, 'params'),
   async (req, res, next) => {
   try {
-    const { email } = req.params;
-    const rta = await service.delete(email);
+    const { id } = req.params;
+    const rta = await service.delete(id);
     res.status(200).json({
       message: 'delete',
-      email: rta,
+      id: rta,
     });
   } catch (error) {
     next(error);
