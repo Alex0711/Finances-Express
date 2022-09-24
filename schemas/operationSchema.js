@@ -3,10 +3,11 @@ const paymentValues = ['food', 'services', 'clothing', 'entertainment', 'home', 
 const entryValues = ['salary', 'sales', 'others'];
 const types = ['payment', 'entry'];
 
-const id = Joi.number().integer();
+const id = Joi.string().uuid();
 const type = Joi.string().valid(...types).label('type');
 const concept = Joi.string().min(3).max(20);
 const amount = Joi.number().min(0);
+const walletId = Joi.number().integer();
 
 const createOperation = Joi.object({
   type: type.required(),
@@ -16,10 +17,16 @@ const createOperation = Joi.object({
     otherwise: Joi.valid(...entryValues),
   }),
   amount: amount.required(),
+  walletId: walletId.required(),
 });
 
 const updateOperationSchema = Joi.object({
-  concept: concept.valid(...entryValues, ...paymentValues),
+  type: type.required(),
+  concept: concept.when('type', {
+    is: 'payment',
+    then: Joi.valid(...paymentValues),
+    otherwise: Joi.valid(...entryValues),
+  }),
   amount: amount
 });
 

@@ -12,8 +12,8 @@ const service = new operationService();
 
 router.get('/', async (req, res, next) => {
   try {
-    const payments = await service.find();
-    res.status(200).json(payments);
+    const operations = await service.find();
+    res.status(200).json(operations);
   } catch (error) {
     next(error);
   }
@@ -25,8 +25,8 @@ router.get(
   async (req, res, next) => {
     const { id } = req.params;
     try {
-      const payment = await service.findOne(id);
-      res.status(200).json(payment);
+      const operation = await service.findOne(id);
+      res.status(200).json(operation);
     } catch (error) {
       next(error);
     }
@@ -39,14 +39,9 @@ router.post(
   async (req, res, next) => {
   try {
     const body = req.body;
-    const newOperation = await service.create(body);
+    const data = await service.create(body);
 
-    res.status(201).json({
-      message: 'Created',
-      data: {
-        newOperation,
-      },
-    });
+    res.status(201).json(data);
   } catch (error) {
     next(error);
   }

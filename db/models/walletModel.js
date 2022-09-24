@@ -38,6 +38,10 @@ const WalletSchema = {
 class Wallet extends Model {
   static associate(models) {
     this.belongsTo(models.User, {as: 'user'});
+    this.hasMany(models.Operation, {
+      as: 'operations',
+      foreignKey: 'walletId'
+    })
   }
 
   static config(sequelize) {

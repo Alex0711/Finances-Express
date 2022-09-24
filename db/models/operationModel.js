@@ -1,4 +1,5 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
+const { WALLET_TABLE } = require('./walletModel')
 
 const OPERATION_TABLE = 'operations';
 
@@ -13,11 +14,11 @@ const OperationSchema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  conecept: {
+  concept: {
     allowNull: false,
     type: DataTypes.STRING
   },
-  mount: {
+  amount: {
     allowNull: false,
     type: DataTypes.FLOAT
   },
@@ -26,12 +27,23 @@ const OperationSchema = {
     type: DataTypes.DATE,
     field: 'created_at',
     defaultValue: Sequelize.NOW
+  },
+  walletId: {
+    allowNull:false,
+    type: DataTypes.INTEGER,
+    field: 'wallet_id',
+    references: {
+      model: WALLET_TABLE,
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
   }
 }
 
 class Operation extends Model {
-  static associate() {
-
+  static associate(models) {
+    this.belongsTo(models.Wallet, {as: 'wallet'});
   }
 
   static config(sequelize) {

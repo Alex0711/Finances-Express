@@ -19,14 +19,24 @@ class userService{
 
   async find() {
     const users = await models.User.findAll({
-      include: ['wallet']
+      include: [
+        {
+          association: 'wallet',
+          include: ['operations']
+        }
+      ]
     });
     return users;
   };
 
   async findOne(id){
     const user = await models.User.findByPk(id, {
-      include: ['wallet']
+      include: [
+        {
+          association: 'wallet',
+          include: ['operations']
+        }
+      ]
     });
     if (!user){
       throw boom.notFound('User not found');
@@ -44,7 +54,7 @@ class userService{
     delete data.newPassword;
     delete data.confirmPassword
 
-    const rta = user.update(data)
+    const rta = await user.update(data)
     return rta;
   };
 

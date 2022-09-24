@@ -13,7 +13,7 @@ class walletService{
 
   async find(){
     const wallet = await models.Wallet.findAll({
-      include:  ['user']
+      include:  ['user', 'operations']
     });
     if (!wallet){
       throw boom.notFound('Wallet not found');
@@ -24,7 +24,7 @@ class walletService{
 
   async findOne(id){
     const wallet = await models.Wallet.findByPk(id, {
-      include:  ['user']
+      include:  ['user', 'operations']
     });
     if (!wallet){
       throw boom.notFound('Wallet not found');
@@ -33,17 +33,10 @@ class walletService{
     }
   };
 
-  async update(id, operation) {
-    const wallet = await this.findOne(id);
-    if(operation.type === 'payment'){
-      wallet.money -= operation.amount;
-    };
+  async update(walletId, money) {
+    const wallet = await this.findOne(walletId);
 
-    if(operation.type === 'entry'){
-      wallet.money += operation.amount;
-    }
-
-    const rta = await wallet.update(wallet.money)
+    const rta = await wallet.update({ money: wallet.money + money })
     return rta;
   };
 
