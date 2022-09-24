@@ -40,7 +40,6 @@ router.post(
   try {
     const body = req.body;
     const newUser = await service.create(body);
-    console.log('router: ', {newUser})
 
     res.status(201).json({
       message: 'Created',
@@ -49,7 +48,6 @@ router.post(
       },
     });
   } catch (error) {
-    console.log('router: ', {error})
     next(error);
   }
 });

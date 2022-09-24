@@ -1,27 +1,14 @@
 const boom = require('@hapi/boom');
-const faker = require('faker');
 const { models } = require('../libs/sequelize');
 
 
 class userService{
   constructor(){
-    this.users = [];
-    this.generate();
-  }
-
-  generate(){
-    for (let i = 0; i < 10; i++) {
-      this.users.push({
-        id: faker.datatype.uuid(),
-        email: faker.internet.email(),
-      })
-    }
   }
 
   async create(data) {
     delete data.confirmPassword;
     const newUser = await models.User.create(data);
-    console.log('service: ', {newUser})
     return newUser;
   }
 

@@ -60,9 +60,10 @@ router.patch(
   try {
     const { id } = req.params;
     const body = req.body;
-    const newPayment = await service.update(id, body);
+    const newOperation = await service.update(id, body);
+
     res.status(201).json({
-      newPayment,
+      newOperation,
     });
   } catch (error) {
     next(error);
