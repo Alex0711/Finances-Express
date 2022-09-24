@@ -6,13 +6,26 @@ class walletService{
   constructor(){
   }
 
-  async create(data) {
-    const newWallet = await models.Wallet.create(data);
+  async create(id) {
+    const newWallet = await models.Wallet.create({userId: id});
     return newWallet;
   }
 
+  async find(){
+    const wallet = await models.Wallet.findAll({
+      include:  ['user']
+    });
+    if (!wallet){
+      throw boom.notFound('Wallet not found');
+    } else{
+      return wallet;
+    }
+  };
+
   async findOne(id){
-    const wallet = await models.Wallet.findByPk(id);
+    const wallet = await models.Wallet.findByPk(id, {
+      include:  ['user']
+    });
     if (!wallet){
       throw boom.notFound('Wallet not found');
     } else{

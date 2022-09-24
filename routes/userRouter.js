@@ -39,13 +39,11 @@ router.post(
   async (req, res, next) => {
   try {
     const body = req.body;
-    const newUser = await service.create(body);
+    const data = await service.create(body);
 
     res.status(201).json({
       message: 'Created',
-      data: {
-        newUser,
-      },
+      data
     });
   } catch (error) {
     next(error);

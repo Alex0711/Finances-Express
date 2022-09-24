@@ -6,6 +6,7 @@ function setupModels(sequelize) {
   User.init(UserSchema, User.config(sequelize));
   Wallet.init(WalletSchema, Wallet.config(sequelize));
 
+  User.associate(sequelize.models);
   Wallet.associate(sequelize.models);
 }
 

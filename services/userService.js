@@ -1,5 +1,9 @@
 const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
+const walletService = require('./walletService');
+
+const service = new walletService();
+
 
 
 class userService{
@@ -9,16 +13,21 @@ class userService{
   async create(data) {
     delete data.confirmPassword;
     const newUser = await models.User.create(data);
-    return newUser;
+    const newWallet = await service.create(newUser.id);
+    return {newUser, newWallet};
   }
 
   async find() {
-    const users = await models.User.findAll();
+    const users = await models.User.findAll({
+      include: ['wallet']
+    });
     return users;
   };
 
   async findOne(id){
-    const user = await models.User.findByPk(id);
+    const user = await models.User.findByPk(id, {
+      include: ['wallet']
+    });
     if (!user){
       throw boom.notFound('User not found');
     } else{
