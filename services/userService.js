@@ -45,6 +45,48 @@ class userService{
     }
   };
 
+  async getPayments(id){
+    const user = await models.User.findByPk(id, {
+      include: [
+        {
+          association: 'wallet',
+          include: [{
+            association: 'operations',
+            where:{
+              type: 'payment'
+            }
+          }],
+        }
+      ]
+    });
+    if (!user){
+      throw boom.notFound('User not found');
+    } else{
+      return user;
+    }
+  };
+
+  async getEntries(id){
+    const user = await models.User.findByPk(id, {
+      include: [
+        {
+          association: 'wallet',
+          include: [{
+            association: 'operations',
+            where:{
+              type: 'entry'
+            }
+          }],
+        }
+      ]
+    });
+    if (!user){
+      throw boom.notFound('User not found');
+    } else{
+      return user;
+    }
+  };
+
   async update(id, data) {
     const user = await this.findOne(id);
     if(user.password !== data.password) {

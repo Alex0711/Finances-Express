@@ -33,6 +33,34 @@ router.get(
   }
 );
 
+router.get(
+  '/:id/payments',
+  validatorHandler(getUserSchema, 'params'),
+  async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const user = await service.getPayments(id);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  '/:id/entries',
+  validatorHandler(getUserSchema, 'params'),
+  async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const user = await service.getEntries(id);
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post(
   '/',
   validatorHandler(createUserSchema, 'body'),

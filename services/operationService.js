@@ -31,7 +31,7 @@ class operationService{
   };
 
   async findOne(id){
-    const operation = models.Operation.findByPk(id);
+    const operation = await models.Operation.findByPk(id, {include: ['wallet']});
     if (!operation){
       throw boom.notFound('Operation not found');
     } else{
@@ -51,8 +51,8 @@ class operationService{
 
   async delete(id) {
     const operation = await this.findOne(id);
-    const wallet = await this.updateWallet(operation.type, operation.amount*-1, operation.walletId)
     await operation.destroy()
+    const wallet = await this.updateWallet(operation.type, operation.amount*-1, operation.walletId)
     return { wallet };
   }
 }
