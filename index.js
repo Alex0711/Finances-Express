@@ -22,6 +22,8 @@ app.use(express.json());
 
 app.use(cors());
 
+require('./utils/auth');
+
 app.listen(port, () => {
   console.log('My port ' + port)
 })

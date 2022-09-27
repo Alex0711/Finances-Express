@@ -4,7 +4,6 @@ const walletRouter = require('./walletRouter')
 const operationRouter = require('./operationRouter');
 const homeRouter = require('./homeRouter');
 const loginRouter = require('./loginRouter');
-const signUpRouter = require('./signUpRouter');
 
 function routerApi(app) {
   const router = express.Router();
@@ -14,7 +13,6 @@ function routerApi(app) {
   router.use('/wallet', walletRouter)
   router.use('/operations', operationRouter);
   router.use('/login', loginRouter);
-  router.use('/signup', signUpRouter);
 }
 
 module.exports = routerApi;
