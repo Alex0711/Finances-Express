@@ -16,7 +16,8 @@ class userService{
     delete data.confirmPassword;
     const newUser = await models.User.create({
       ...data,
-      password: hash
+      password: hash,
+      role: 'user',
     });
     const newWallet = await service.create(newUser.id);
     delete newUser.dataValues.password;
