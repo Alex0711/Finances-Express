@@ -96,6 +96,8 @@ router.post(
 router.post(
   '/newadmin',
   validatorHandler(createUserSchema, 'body'),
+  passport.authenticate('jwt', { session: false }),
+  checkRole(['admin']),
   async (req, res, next) => {
     try {
       const body = req.body;
