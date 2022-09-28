@@ -12,13 +12,16 @@ class walletService{
   }
 
   async find(){
-    const wallet = await models.Wallet.findAll({
+    const wallets = await models.Wallet.findAll({
       include:  ['user', 'operations']
     });
-    if (!wallet){
+    for (const wallet of wallets) {
+      delete wallet.dataValues.user.dataValues.password
+    }
+    if (!wallets){
       throw boom.notFound('Wallet not found');
     } else{
-      return wallet;
+      return wallets;
     }
   };
 
@@ -29,6 +32,7 @@ class walletService{
     if (!wallet){
       throw boom.notFound('Wallet not found');
     } else{
+      delete wallet.dataValues.user.dataValues.password
       return wallet;
     }
   };

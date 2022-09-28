@@ -32,6 +32,9 @@ class userService{
         }
       ]
     });
+    for (const user of users) {
+      delete user.dataValues.password;
+    }
     return users;
   };
 
@@ -75,6 +78,7 @@ class userService{
     if (!user){
       throw boom.notFound('User not found');
     } else{
+      delete user.dataValues.password;
       return user;
     }
   };
@@ -96,21 +100,22 @@ class userService{
     if (!user){
       throw boom.notFound('User not found');
     } else{
+      delete user.dataValues.password;
       return user;
     }
   };
 
   async update(id, data) {
     const user = await this.findOne(id);
-    if(user.password !== data.password) {
-      throw boom.unauthorized('Unautorized')
-    }
-    data.password = data.newPassword;
-    delete data.newPassword;
-    delete data.confirmPassword
+    const isMatch = await bcrypt.compare(data.password, user.password)
 
-    const rta = await user.update(data)
-    return rta;
+    if(isMatch) {
+      const newHash = await bcrypt.hash(data.newPassword, 10);
+      const rta = await user.update({password: newHash});
+      delete rta.dataValues.password
+      return rta;
+    }
+    throw boom.unauthorized();
   };
 
   async delete(id) {
