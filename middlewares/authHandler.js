@@ -1,6 +1,8 @@
 const boom = require('@hapi/boom');
 const UserService = require('../services/userService');
-const service = new UserService
+const OperationService = require('../services/operationService');
+const userService = new UserService()
+const operationService = new OperationService()
 
 function checkRole(roles) {
   return (req, res, next) => {
@@ -26,7 +28,7 @@ function checkSameUser(req, res, next) {
 
 async function isMyWallet(req, res, next) {
   const payload = req.user;
-  const user = await service.findOne(payload.sub)
+  const user = await userService.findOne(payload.sub)
   const { id: walletId } = req.params;
 
   if (user.role === 'admin' || user.dataValues.wallet.dataValues.id === Number(walletId)) {
@@ -36,4 +38,17 @@ async function isMyWallet(req, res, next) {
   }
 }
 
-module.exports = { checkSameUser, checkRole, isMyWallet };
+async function isMyOperation(req, res, next) {
+  const { id: opId } = req.params;
+  const payload = req.user;
+  const operation = await operationService.findOne(opId);
+  const userId = operation.dataValues.wallet.dataValues.userId
+  if (payload.role ==='admin' || payload.sub === userId) {
+    req.operation = operation;
+    next();
+  } else {
+    next(boom.unauthorized())
+  }
+}
+
+module.exports = { checkSameUser, checkRole, isMyWallet, isMyOperation };
