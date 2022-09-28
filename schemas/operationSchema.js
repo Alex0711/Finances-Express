@@ -7,9 +7,8 @@ const id = Joi.string().uuid();
 const type = Joi.string().valid(...types).label('type');
 const concept = Joi.string().min(3).max(20);
 const amount = Joi.number().min(0);
-const walletId = Joi.number().integer();
 
-const createOperation = Joi.object({
+const createOperationSchema = Joi.object({
   type: type.required(),
   concept: concept.required().when('type', {
     is: 'payment',
@@ -17,7 +16,6 @@ const createOperation = Joi.object({
     otherwise: Joi.valid(...entryValues),
   }),
   amount: amount.required(),
-  walletId: walletId.required(),
 });
 
 const updateOperationSchema = Joi.object({
@@ -34,4 +32,4 @@ const getOperationSchema = Joi.object({
   id: id.required(),
 });
 
-module.exports = { createOperation, updateOperationSchema, getOperationSchema };
+module.exports = { createOperationSchema, updateOperationSchema, getOperationSchema };

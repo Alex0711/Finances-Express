@@ -40,11 +40,20 @@ class operationService{
   };
 
   async update(id, data) {
-    const operation = await this.findOne(id);
-    if(operation.type === data.type){
-      const wallet = await this.updateWallet(operation.type, (operation.amount - data.amount)*-1, operation.walletId)
-      await operation.update(data)
-      return {operation, wallet};
+    const oldOperation = await this.findOne(id);
+    if(oldOperation.type === data.type){
+      const difference = oldOperation.dataValues.amount - data.amount;
+      let wallet;
+      if (oldOperation.type === 'payment') {
+        wallet = await service.update(oldOperation.walletId, difference);
+      }
+      if (oldOperation.type === 'entry') {
+        wallet = await service.update(oldOperation.walletId, difference *-1);
+      }
+      const operation = await oldOperation.update(data)
+      delete wallet.dataValues.operations;
+      delete operation.dataValues.wallet;
+      return {wallet, operation};
     }
     throw boom.badRequest('Can not change the type of operation')
   };

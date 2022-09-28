@@ -39,15 +39,21 @@ async function isMyWallet(req, res, next) {
 }
 
 async function isMyOperation(req, res, next) {
-  const { id: opId } = req.params;
-  const payload = req.user;
-  const operation = await operationService.findOne(opId);
-  const userId = operation.dataValues.wallet.dataValues.userId
-  if (payload.role ==='admin' || payload.sub === userId) {
-    req.operation = operation;
-    next();
-  } else {
-    next(boom.unauthorized())
+  try {
+    const { id: opId } = req.params;
+    const payload = req.user;
+    const operation = await operationService.findOne(opId);
+    const userId = operation.dataValues.wallet.dataValues.userId
+    console.log(payload)
+    if (payload.role ==='admin' || payload.sub === userId) {
+      req.operation = operation;
+      next();
+    } else {
+      next(boom.unauthorized())
+    }
+
+  } catch (error) {
+    next(error);
   }
 }
 

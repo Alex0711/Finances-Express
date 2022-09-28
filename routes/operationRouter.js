@@ -3,11 +3,7 @@ const passport = require('passport');
 const { checkRole, isMyOperation } = require('./../middlewares/authHandler');
 const operationService = require('../services/operationService');
 const validatorHandler = require('../middlewares/validatorHandler');
-const {
-  createOperation,
-  updateOperationSchema,
-  getOperationSchema,
-} = require('./../schemas/operationSchema');
+const { updateOperationSchema, getOperationSchema, } = require('./../schemas/operationSchema');
 
 const router = express.Router();
 const service = new operationService();
@@ -43,36 +39,19 @@ router.get(
   }
 );
 
-router.post(
-  '/',
-  validatorHandler(createOperation, 'body'),
-  passport.authenticate('jwt', { session: false }),
-  isMyOperation,
-  async (req, res, next) => {
-    try {
-      const body = req.body;
-      const data = await service.create(body);
-
-      res.status(201).json(data);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
 router.patch(
   '/:id',
   validatorHandler(updateOperationSchema, 'body'),
   validatorHandler(getOperationSchema, 'params'),
+  passport.authenticate('jwt', { session: false }),
+  isMyOperation,
   async (req, res, next) => {
     try {
       const { id } = req.params;
       const body = req.body;
       const newOperation = await service.update(id, body);
 
-      res.status(201).json({
-        newOperation,
-      });
+      res.status(201).json(newOperation);
     } catch (error) {
       next(error);
     }
@@ -82,6 +61,7 @@ router.patch(
 router.delete(
   '/:id',
   validatorHandler(getOperationSchema, 'params'),
+  isMyOperation,
   async (req, res, next) => {
     try {
       const { id } = req.params;

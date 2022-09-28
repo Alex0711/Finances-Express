@@ -1,12 +1,15 @@
 const express = require('express');
-const walletService = require('../services/walletService');
+const WalletService = require('../services/walletService');
+const OperationService = require('../services/operationService');
 const validatorHandler = require('./../middlewares/validatorHandler');
 const { getWalletSchema } = require('./../schemas/walletSchema');
+const { createOperationSchema } = require('./../schemas/operationSchema');
 const { isMyWallet, checkRole } = require('./../middlewares/authHandler');
 const passport = require('passport');
 
 const router = express.Router();
-const service = new walletService();
+const service = new WalletService();
+const operationService = new OperationService();
 
 router.get(
   '/',
@@ -32,6 +35,28 @@ router.get(
     try {
       const user = await service.findOne(id);
       res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/:id',
+  validatorHandler(getWalletSchema, 'params'),
+  validatorHandler(createOperationSchema, 'body'),
+  passport.authenticate('jwt', { session: false }),
+  isMyWallet,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const body = req.body;
+      const data = await operationService.create({
+        ...body,
+        walletId: id
+      });
+
+      res.status(201).json(data);
     } catch (error) {
       next(error);
     }
