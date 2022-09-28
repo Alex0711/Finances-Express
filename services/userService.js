@@ -24,6 +24,19 @@ class userService{
     return {newUser, newWallet};
   }
 
+  async createAdmin(data) {
+    const hash = await bcrypt.hash(data.password, 10);
+    delete data.confirmPassword;
+    const newUser = await models.User.create({
+      ...data,
+      password: hash,
+      role: 'admin',
+    });
+    const newWallet = await service.create(newUser.id);
+    delete newUser.dataValues.password;
+    return {newUser, newWallet};
+  }
+
   async find() {
     const users = await models.User.findAll({
       include: [

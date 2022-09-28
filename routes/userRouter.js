@@ -93,6 +93,24 @@ router.post(
   }
 );
 
+router.post(
+  '/newadmin',
+  validatorHandler(createUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const data = await service.createAdmin(body);
+
+      res.status(201).json({
+        message: 'Created',
+        data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.patch(
   '/:id',
   validatorHandler(getUserSchema, 'params'),
