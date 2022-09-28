@@ -8,9 +8,8 @@ router.post(
   '/',
   async (req, res, next) => {
     try {
-      const user = req.user
-      const token = await service.login(user);
-      res.status(200).json({user, token});
+      const token = await service.login(req.body);
+      res.status(200).json(token);
     } catch (error) {
       next(error);
     }
