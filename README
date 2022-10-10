@@ -4,3 +4,6 @@ Repositorio de la API: https://github.com/Alex0711/Finances-Express
 Repositorio de la UI: https://github.com/Alex0711/MyWallet
 
 La API fue desplegada en heroku y la UI en vercel: https://mywallet-henna-five.vercel.app/
+
+Lo hice en el menor tiempo posible e intentando seguir las buenas prácticas.
+Como autocrítica, reconozco que las rutas de la API deberían estar mejor organizadas, me gustaría agregar una forma de resetear la contraseña mediante un email. La UI aún está bastante simple y le falta pulir detalles que espero solucionar.
